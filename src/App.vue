@@ -37,11 +37,27 @@ export default {
     toggleTaskForm() {
       this.showAddTask = !this.showAddTask
     },
-    addTask(newTask) {
-      this.tasks = [ ...this.tasks, newTask ]
+    async addTask(newTask) {
+      const response = await fetch('JSON_API/tasks', {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newTask)
+      })
+
+      const data = await response.json()
+      
+      this.tasks = [...this.tasks, data]
     },
     deleteTask(id) {
-      this.tasks = this.tasks.filter(task => task.id !== id)
+      fetch(`JSON_API/tasks/${id}`, { method: "DELETE" })
+        .then(response => {
+          return response.status === 200 ?
+            this.tasks = this.tasks.filter(task => task.id !== id)
+            : alert("Error deleting task")
+        })
+
     },
     toggleReminder(id) {
       this.tasks = this.tasks.map(task => {
@@ -53,28 +69,17 @@ export default {
           : task
       })
     },
+    fetchTasks() {
+      return fetch('JSON_API/tasks')
+        .then(response => response.json())
+    },
+    fetchTask(id) {
+      return fetch(`JSON_API/tasks/${id}`)
+        .then(response => response.json())
+    },
   },
-  created() {
-    this.tasks = [
-      {
-        id: 1, 
-        text: 'Doctors Appointment',
-        day: 'March 3rd at 2:30pm',
-        reminder: true
-      },
-      {
-        id: 2, 
-        text: 'Meeting at School',
-        day: 'March 3rd at 1:30pm',
-        reminder: true
-      },
-      {
-        id: 3, 
-        text: 'Food Shopping',
-        day: 'March 3rd at 11:00am',
-        reminder: false
-      },
-    ]
+  async created() {
+    this.tasks = await this.fetchTasks()
   }
 }
 </script>
