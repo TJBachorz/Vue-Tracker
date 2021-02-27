@@ -1,6 +1,6 @@
 <template>
     <button 
-        @click="onClick()" 
+        @click="$emit('toggle-task-form')" 
         class="btn" 
         :style="{background: color}"
     >
@@ -15,10 +15,5 @@
             text: String,
             color: String
         },
-        methods: {
-            onClick() {
-                console.log("click")
-            }
-        }
     }
 </script>

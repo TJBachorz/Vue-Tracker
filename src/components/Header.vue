@@ -1,7 +1,7 @@
 <template>
     <header>
         <h1>{{ title }}</h1>
-        <Button text="Add Task" color="green"/>
+        <Button @toggle-task-form="$emit('toggle-task-form')" text="Add Task" color="green"/>
     </header>
 </template>
 
@@ -18,7 +18,8 @@ export default {
     },
     components: {
         Button
-    }
+    },
+    emits: ['toggle-task-form']
 }
 </script>
 
