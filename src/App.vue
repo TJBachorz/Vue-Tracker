@@ -1,6 +1,9 @@
 <template>
   <div class="container">
-    <Header @toggle-task-form="toggleTaskForm"/>
+    <Header 
+      :showAddTask="showAddTask"
+      @toggle-task-form="toggleTaskForm"
+    />
     <div v-if="showAddTask">
       <AddTask @add-task="addTask" />
     </div>

@@ -1,6 +1,6 @@
 <template>
     <button 
-        @click="$emit('toggle-task-form')" 
+        @click="$emit('button-click')" 
         class="btn" 
         :style="{background: color}"
     >
