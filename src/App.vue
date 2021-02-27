@@ -1,7 +1,9 @@
 <template>
   <div class="container">
     <Header/>
+    <AddTask @add-task="addTask" />
     <Tasks 
+      @toggle-reminder="toggleReminder"
       @delete-task="deleteTask" 
       :tasks="tasks"
     />
@@ -9,14 +11,16 @@
 </template>
 
 <script>
-import Header from './components/Header'
-import Tasks from './components/Tasks'
+import Header from "./components/Header"
+import Tasks from "./components/Tasks"
+import AddTask from "./components/AddTask"
 
 export default {
   name: "App",
   components: {
     Header,
-    Tasks
+    Tasks,
+    AddTask
   },
   data() {
     return {
@@ -24,9 +28,22 @@ export default {
     }
   },
   methods: {
+    addTask(newTask) {
+      this.tasks = [ ...this.tasks, newTask ]
+    },
     deleteTask(id) {
       this.tasks = this.tasks.filter(task => task.id !== id)
-    }
+    },
+    toggleReminder(id) {
+      this.tasks = this.tasks.map(task => {
+        return task.id === id ? 
+          {
+            ...task,
+            reminder: !task.reminder
+          }
+          : task
+      })
+    },
   },
   created() {
     this.tasks = [
@@ -50,7 +67,7 @@ export default {
       },
     ]
   }
-};
+}
 </script>
 
 <style>
