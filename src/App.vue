@@ -16,9 +16,9 @@
 </template>
 
 <script>
-import Header from "./components/Header"
-import Tasks from "./components/Tasks"
-import AddTask from "./components/AddTask"
+import Header from "./components/Header";
+import Tasks from "./components/Tasks";
+import AddTask from "./components/AddTask";
 
 export default {
   name: "App",
@@ -59,15 +59,28 @@ export default {
         })
 
     },
-    toggleReminder(id) {
-      this.tasks = this.tasks.map(task => {
-        return task.id === id ? 
-          {
-            ...task,
-            reminder: !task.reminder
-          }
-          : task
+    async toggleReminder(id) {
+      const targetTask = await this.fetchTask(id)
+      const updatedTask = {
+        ...targetTask,
+        reminder: !targetTask.reminder
+      }
+
+      fetch(`JSON_API/tasks/${id}`, {
+        method: "PUT",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updatedTask)
+      }).then(response => response.json())
+      .then(newTask => {
+        this.tasks = this.tasks.map(task => {
+          return task.id === id ? 
+            { ...task, reminder: newTask.reminder}
+            : task
+        })
       })
+
     },
     fetchTasks() {
       return fetch('JSON_API/tasks')
